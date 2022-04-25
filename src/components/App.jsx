@@ -1,9 +1,11 @@
 import React from "react";
-import SearchBar from "./SearchBar";
+import SearchBar from "./SearchBar.jsx";
+import ImageList from "./ImageList.jsx";
 import axios from "axios";
 class App extends React.Component {
   state = {
     kalit: "",
+    images: [],
   };
   getSearchData = (keyword) => {
     this.setState({ kalit: keyword });
@@ -15,12 +17,16 @@ class App extends React.Component {
     const data = await axios.get("https://api.unsplash.com/search/photos", {
       params: {
         query: this.state.kalit,
+        per_page: 30,
       },
       headers: {
-        Authorization: "Client-ID xF1Pf3JI8CQqisc7F4_ZVd0qyiFDqrhqby0sB2j3loY",
+        Authorization: "Client-ID Zn0BdWt4lW0tA_Vdp-x-rlwZRBGqPg_0Q2eJRgGiius",
       },
     });
-    console.log(data.data);
+    let imageLinks = data.data.results.map((el) => {
+      return el.links.html;
+    });
+    this.setState({ images: imageLinks });
   };
   render() {
     return (
@@ -29,6 +35,9 @@ class App extends React.Component {
           App component
         </h1>
         <SearchBar getData={this.getSearchData} />
+        {this.state.images.map((el) => {
+          return <ImageList link={el} />;
+        })}
       </>
     );
   }
