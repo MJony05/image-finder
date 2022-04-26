@@ -1,13 +1,10 @@
 import React from "react";
+import ImageBox from "./ImageBox";
+import "./imageList.css";
 
 class ImageList extends React.Component {
   render() {
-    return (
-      <>
-        <h1>{this.props.link}</h1>
-        <img src={this.props.link} alt="image from unsplash" />
-      </>
-    );
+    return <ImageBox props={this.props} />;
   }
 }
 export default ImageList;

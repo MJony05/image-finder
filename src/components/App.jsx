@@ -2,42 +2,64 @@ import React from "react";
 import SearchBar from "./SearchBar.jsx";
 import ImageList from "./ImageList.jsx";
 import axios from "axios";
+import "./imageList.css";
 class App extends React.Component {
   state = {
-    kalit: "",
     images: [],
+    page: 2,
   };
-  getSearchData = (keyword) => {
-    this.setState({ kalit: keyword });
-  };
-  componentDidUpdate() {
-    this.getResult();
-  }
-  getResult = async () => {
+  getSearchData = async (keyword) => {
     const data = await axios.get("https://api.unsplash.com/search/photos", {
       params: {
-        query: this.state.kalit,
+        query: keyword,
         per_page: 30,
+        page: this.state.page,
       },
       headers: {
-        Authorization: "Client-ID Zn0BdWt4lW0tA_Vdp-x-rlwZRBGqPg_0Q2eJRgGiius",
+        Authorization: "Client-ID Wc90NIYsLDPrNlYsk6Ji37fAwaUphYLa-D-UCNdKjAY",
       },
     });
     let imageLinks = data.data.results.map((el) => {
-      return el.links.html;
+      return el;
     });
+
     this.setState({ images: imageLinks });
   };
+
+  // getResult = async () => {
+
+  //   let imageLinks = data.data.results.map((el) => {
+  //     return el.links.download;
+  //   });
+
+  //   this.setState({ images: imageLinks });
+  // };
   render() {
     return (
       <>
-        <h1 style={{ textAlign: "center", marginTop: "1rem" }}>
-          App component
-        </h1>
+        <h1 style={{ textAlign: "center", marginTop: "1rem" }}>Welcome!</h1>
         <SearchBar getData={this.getSearchData} />
-        {this.state.images.map((el) => {
-          return <ImageList link={el} />;
-        })}
+
+        <div className="images-container">
+          {this.state.images.map((el) => {
+            return <ImageList props={el} key={el.id} />;
+          })}
+        </div>
+        <div
+          className="btn-container"
+          style={{ margin: "0 auto", textAlign: "center" }}
+        >
+          <button
+            className="next"
+            style={{ padding: "0.5rem 1rem" }}
+            onClick={() => {
+              let a = this.state.page + 1;
+              this.setState({ page: a });
+            }}
+          >
+            Next
+          </button>
+        </div>
       </>
     );
   }
