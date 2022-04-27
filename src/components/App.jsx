@@ -6,13 +6,25 @@ import "./imageList.css";
 class App extends React.Component {
   state = {
     images: [],
-    page: 2,
+    page: 1,
+    keyword: "",
   };
+  nextPage = async () => {
+    let a = this.state.page + 1;
+    await this.getSearchData(this.state.keyword);
+    this.setState({ page: a });
+  };
+  prePage = async () => {
+    await this.getSearchData(this.state.keyword);
+    let a = this.state.page - 1;
+    this.setState({ page: a });
+  };
+
   getSearchData = async (keyword) => {
     const data = await axios.get("https://api.unsplash.com/search/photos", {
       params: {
         query: keyword,
-        per_page: 30,
+        per_page: 10,
         page: this.state.page,
       },
       headers: {
@@ -23,9 +35,8 @@ class App extends React.Component {
       return el;
     });
 
-    this.setState({ images: imageLinks });
+    this.setState({ images: imageLinks, keyword: keyword });
   };
-
   // getResult = async () => {
 
   //   let imageLinks = data.data.results.map((el) => {
@@ -52,12 +63,16 @@ class App extends React.Component {
           <button
             className="next"
             style={{ padding: "0.5rem 1rem" }}
-            onClick={() => {
-              let a = this.state.page + 1;
-              this.setState({ page: a });
-            }}
+            onClick={this.prePage}
           >
-            Next
+            previus page
+          </button>
+          <button
+            className="next"
+            style={{ padding: "0.5rem 1rem" }}
+            onClick={this.nextPage}
+          >
+            Next page
           </button>
         </div>
       </>
