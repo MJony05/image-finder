@@ -24,7 +24,7 @@ class App extends React.Component {
     const data = await axios.get("https://api.unsplash.com/search/photos", {
       params: {
         query: keyword,
-        per_page: 10,
+        per_page: 50,
         page: this.state.page,
       },
       headers: {
